@@ -90,14 +90,14 @@ public class StorageFile {
         return filePath.toString().endsWith(".xml");
     }
     
-    public boolean ifFileExists() throws StorageOperationException {
+    public boolean ifFileExists() {
         ArrayList<String> lines = null;
         try {
             lines = new ArrayList<>(Files.readAllLines(Paths.get(DEFAULT_STORAGE_FILEPATH)));
         } catch (FileNotFoundException fnfe) {
-        	throw new StorageOperationException("Your file just disappeared: " + DEFAULT_STORAGE_FILEPATH);
-        } catch (IOException e) {
-        	throw new StorageOperationException("Error reading your file: " + DEFAULT_STORAGE_FILEPATH);
+        	return false;
+        } catch (IOException ioe) {
+        	return false;
 		}
         return true;
     }
