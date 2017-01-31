@@ -17,8 +17,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 /**
  * Represents the file used to store address book data.
@@ -27,6 +29,8 @@ public class StorageFile {
 
     /** Default file path used if the user doesn't provide the file name. */
     public static final String DEFAULT_STORAGE_FILEPATH = "addressbook.xml";
+
+	private static final String MESSAGE_ERROR_MISSING_STORAGE_FILE = null;
 
     /* Note: Note the use of nested classes below.
      * More info https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html
@@ -84,6 +88,18 @@ public class StorageFile {
      */
     private static boolean isValidPath(Path filePath) {
         return filePath.toString().endsWith(".xml");
+    }
+    
+    public boolean ifFileExists() throws StorageOperationException {
+        ArrayList<String> lines = null;
+        try {
+            lines = new ArrayList<>(Files.readAllLines(Paths.get(DEFAULT_STORAGE_FILEPATH)));
+        } catch (FileNotFoundException fnfe) {
+        	throw new StorageOperationException("Your file just disappeared: " + DEFAULT_STORAGE_FILEPATH);
+        } catch (IOException e) {
+        	throw new StorageOperationException("Error reading your file: " + DEFAULT_STORAGE_FILEPATH);
+		}
+        return true;
     }
 
     /**
